@@ -11,7 +11,6 @@ class Graph {
         }
     }
 
-    
     addEdges(board = this.chessBoard) {
         for (let [pos] of board) {
             const positionArray = pos.split(',');
@@ -28,13 +27,37 @@ class Graph {
                 10: [ x - 2, y + 1 ],
                 11: [ x - 1, y + 2 ]
             }
-            
+
             for (let direction in knightOffsets) {
                 const move = knightOffsets[direction].toString();
                 if (board.has(move) && !board.get(pos).includes(move)) this.chessBoard.get(pos).push(move) 
             }
         }
     }
+
+    knightMoves(startSq, endSq) {
+        const paths = []
+        const visitedSquares = new Set();
+        const queue = [];
+        queue.push([startSq, [startSq]]);
+        while (queue.length > 0) {
+            let [current, path] = queue.shift();
+            visitedSquares.add(current)
+            if (current === endSq) {
+                paths.push(path)
+            }
+            const neighbours = this.chessBoard.get(current);
+            for (let pos of neighbours) {
+                if (!visitedSquares.has(pos)) queue.push([pos, [...path, pos]]);
+            }
+        }
+        console.log(`Fastest route from ${startSq} to ${endSq} is:`)
+        paths.forEach(tile => console.log(tile))
+    }
 }
 
-
+const board = new Graph();
+board.addVertices()
+board.addEdges()
+board.knightMoves('0,0', '1,2');
+board.knightMoves('3,1', '2,2');
